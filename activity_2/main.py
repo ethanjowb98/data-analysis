@@ -1,4 +1,5 @@
 from five_number import get_five_number_summary
+from box_and_whiskers import generate_parallel_boxplot
 from typing import List
 
 location_1 = [1.6, 4.0, 3.6, 4.8, 4.2, 3.4, 5.4, 3.5, 2.8, 2.1, 3.1, 3.3, 2.2, 4.4, 4.8]
@@ -14,3 +15,5 @@ def print_five_summary(data: List[float], summary_title: str):
 print_five_summary(location_1, "Location 1")
 print()
 print_five_summary(location_2, "Location 2")
+
+generate_parallel_boxplot([location_1, location_2], ["Location 1", "Location 2"])
