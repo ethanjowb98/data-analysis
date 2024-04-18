@@ -10,7 +10,7 @@ def print_five_summary(data: List[float], summary_title: str):
     print(vertical_border)
     print(f"| {summary_title} |")
     print(vertical_border)
-    print(get_five_number_summary(data))        
+    print(get_five_number_summary(data))
 
 print_five_summary(location_1, "Location 1")
 print()
