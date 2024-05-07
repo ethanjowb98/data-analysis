@@ -1,3 +1,5 @@
+# Code Tutorial: https://www.datacamp.com/tutorial/understanding-logistic-regression-python
+
 import pandas as pd
 import numpy as np
 import seaborn as sb
@@ -21,6 +23,9 @@ headers = [
 dataset = pd.read_excel("activity_5_data.xlsx", names=headers, header=None)
 dataset.drop(index=dataset.index[0], axis="index", inplace=True)
 dataset = dataset.dropna()
+
+for row in ["image", "attach", "password"]:
+    dataset.loc[dataset[row] > 1, row] = 1
 
 ind_var = dataset[headers]  # Feature (X)
 dep_var = dataset["spam"]  # Target (Y)
