@@ -20,14 +20,16 @@ headers = [
     "urgent_subj"
 ]
 
-dataset = pd.read_excel("activity_5_data.xlsx", names=headers, header=None)
+dataset = pd.read_excel("./activity_5_data.xlsx", names=headers, header=None)
 dataset.drop(index=dataset.index[0], axis="index", inplace=True)
 dataset = dataset.dropna()
 
 for row in ["image", "attach", "password"]:
     dataset.loc[dataset[row] > 1, row] = 1
 
-ind_var = dataset[headers]  # Feature (X)
+feature_headers = headers[1:]
+
+ind_var = dataset[feature_headers]  # Feature (X)
 dep_var = dataset["spam"]  # Target (Y)
 
 ind_var_train, ind_var_test, dep_var_train, dep_var_test = train_test_split(
@@ -37,7 +39,7 @@ ind_var_train, ind_var_test, dep_var_train, dep_var_test = train_test_split(
     random_state=16
 )
 
-logreg = LogisticRegression(random_state=16)
+logreg = LogisticRegression(random_state=3, max_iter=1000)
 logreg.fit(ind_var_train, dep_var_train.tolist())
 
 dep_var_predict = logreg.predict(ind_var_test)
