@@ -1,5 +1,4 @@
 import pandas as pd
-import seaborn as sb
 from sklearn.linear_model import LinearRegression
 from matplotlib import pyplot as plot
 from sklearn import metrics
