@@ -1,7 +1,6 @@
 import pandas as pd
 import seaborn as sb
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plot
 from sklearn import metrics
 
@@ -17,12 +16,6 @@ dataset["os_type"] = dataset["os_type"].astype("category").cat.codes
 
 feature_var = dataset.drop(columns="time")  # X
 dependent_var = dataset["time"]  # Y
-
-feat_var_train, feat_var_test, dep_var_train, dep_var_test = train_test_split(
-    feature_var,
-    dependent_var,
-    test_size=0.30
-)
 
 model = LinearRegression()
 model.fit(feature_var, dependent_var)
