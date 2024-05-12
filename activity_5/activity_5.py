@@ -40,11 +40,11 @@ ind_var_train, ind_var_test, dep_var_train, dep_var_test = train_test_split(
 )
 
 logreg = LogisticRegression(random_state=3, max_iter=1000)
-logreg.fit(ind_var_train, dep_var_train.tolist())
+logreg.fit(ind_var, dep_var.tolist())
 
-dep_var_predict = logreg.predict(ind_var_test)
+dep_var_predict = logreg.predict(ind_var)
 
-conf_matrix = metrics.confusion_matrix(dep_var_test.tolist(), dep_var_predict.tolist())
+conf_matrix = metrics.confusion_matrix(dep_var.tolist(), dep_var_predict.tolist())
 
 sb.set_theme(style="white")
 sb.set_theme(style="whitegrid", color_codes=True)
@@ -63,7 +63,7 @@ plot.ylabel("Actual data")
 plot.xlabel("Predicted data")
 
 report = metrics.classification_report(
-    y_true=dep_var_test.tolist(),
+    y_true=dep_var.tolist(),
     y_pred=dep_var_predict.tolist(),
     target_names=["not spam", "spam"]
 )
