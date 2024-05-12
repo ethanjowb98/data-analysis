@@ -21,6 +21,7 @@ model.fit(feature_var, dependent_var)
 
 dep_var_predict = model.predict(feature_var)
 
+plot.figure(figsize=(12, 5))
 plot.scatter(dependent_var, dep_var_predict)
 plot.xlabel("Actual Time")
 plot.ylabel("Predicted Time")
