@@ -4,6 +4,7 @@ from matplotlib import pyplot as plot
 from sklearn import metrics
 from statsmodels import api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from scipy import stats
 
 # Define column headers
 headers = [
@@ -20,9 +21,6 @@ dataset.drop(index=dataset.index[0], axis="index", inplace=True)
 
 # Convert categorical variable os_type to numerical
 dataset["os_type"] = dataset["os_type"].astype("category").cat.codes
-
-# Convert dataset to float (this line seems redundant as it doesn't modify dataset in place)
-dataset.astype(float)
 
 # Define feature variables (X) and dependent variable (Y)
 feature_var = dataset.drop(columns="time")
@@ -41,11 +39,10 @@ plot.scatter(dep_var, dep_predict)
 plot.xlabel("Actual Time")
 plot.ylabel("Predicted Time")
 plot.savefig("scatterplot.png")
+plot.clf()
 
 # Calculate R-squared and save to summary.txt
 r2_score = metrics.r2_score(dep_var, dep_predict)
-with open("summary.txt", "w") as file:
-    file.write(str(float(r2_score)))
 
 # Get coefficients and intercept
 coeff = model.coef_
@@ -55,12 +52,19 @@ intercept = model.intercept_
 dep_var = dep_var.astype(float)
 
 # Calculate residuals
-residuals = dep_var.sub(dep_predict)
+residuals = dep_var - dep_predict
+
+# Kolmogorov-Smirnov Test
+ks_stats, ks_pvalue = stats.kstest(residuals, "norm")
+
+# Shapiro-Wilk Test
+sw_stats, sw_pvalue = stats.shapiro(residuals)
 
 # Plot Q-Q plot of residuals
 sm.qqplot(residuals, line="45")
 plot.title("Q-Q Plot of Residuals")
 plot.savefig("qqplot_residuals.png")
+plot.clf()
 
 # Plot residuals vs. fitted values to check homoscedasticity
 plot.scatter(dep_predict, residuals)
@@ -68,6 +72,7 @@ plot.xlabel("Fitted values")
 plot.ylabel("Residuals")
 plot.title("Residuals vs Fitted Values")
 plot.savefig("homoscedasticity.png")
+plot.clf()
 
 # Calculate Variance Inflation Factor (VIF) to check multicollinearity
 vif = pd.DataFrame()
@@ -79,7 +84,25 @@ vif["vif"] = [
     ) for i in range(feature_var.shape[1])
 ]
 
-# Print and save VIF
-print(f"VIF: {vif}")
-with open("vif.txt", "w") as f:
-    f.write(str(vif))
+# Write it to file
+with open("summary.txt", "w") as file:
+    fw = file.write
+    fw("SUMMARY\n")
+    fw(f"R2_Score: \t\t\t\t\t{r2_score}\n")
+    fw("-------------\n")
+    fw("Coeff: \t\t\t[\n")
+    for i, value in enumerate(coeff):
+        fw(f"\t{headers[i]}: {value},\n ")
+    fw("]\n")
+    fw(f"Intercept: \t\t\t\t\t{intercept}\n")
+    fw("-------------\n")
+    fw("VIF\n")
+    fw(f"{vif}\n")
+    fw("-------------\n")
+    fw("Kolmogorov-Smirnov Test\n")
+    fw(f"Value: \t\t\t\t\t\t{ks_pvalue}\n")
+    fw(f"Interpretation: \t\t\t{'Normally distirbuted' if ks_pvalue > 0.05 else 'Not normally distributed'}\n")
+    fw("-------------\n")
+    fw("Shapiro-Wil Test\n")
+    fw(f"Value: \t\t\t\t\t\t{sw_pvalue}\n")
+    fw(f"Interpretation: \t\t\t{'Normally distirbuted' if sw_pvalue > 0.05 else 'Not normally distributed'}\n")
