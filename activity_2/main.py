@@ -1,4 +1,4 @@
-from five_number import get_five_number_summary
+from five_number import get_five_number_summary, Summary
 from box_and_whiskers import generate_parallel_boxplot
 from typing import List
 
@@ -10,10 +10,19 @@ def print_five_summary(data: List[float], summary_title: str):
     print(vertical_border)
     print(f"| {summary_title} |")
     print(vertical_border)
-    print(get_five_number_summary(data))        
+    object_summary = get_five_number_summary(data)
+    print(object_summary)        
+    return object_summary
 
-print_five_summary(location_1, "Location 1")
+# def print_whisker_values(summary: Summary):
+#     IQR = summary.third_quartile - summary.first_quartile
+#     left_whisker = summary.first_quartile - (1.5*IQR)
+#     right_whisker = summary.third_quartile + (1.5*IQR)
+#     print(f"LEFT WHISKER VALUE: {left_whisker}")
+#     print(f"RIGHT WHICKER VALUE: {right_whisker}")
+
+location_1_summary = print_five_summary(location_1, "Location 1")
 print()
-print_five_summary(location_2, "Location 2")
+location_2_summary = print_five_summary(location_2, "Location 2")
 
 generate_parallel_boxplot([location_1, location_2], ["Location 1", "Location 2"])
